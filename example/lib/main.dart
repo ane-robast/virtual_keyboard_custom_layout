@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:virtual_keyboard_custom_layout/virtual_keyboard_custom_layout.dart';
+import 'package:virtual_keyboard_custom_layout_example/custom_textfield.dart';
 import 'package:virtual_keyboard_custom_layout_example/keyboard_aux.dart';
+import 'package:virtual_keyboard_custom_layout_example/keyboard_provider.dart';
 import 'package:virtual_keyboard_custom_layout_example/types_keyboard.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(const MyApp());
+void main() => runApp(ChangeNotifierProvider(create: (context) => KeyboardProvider(), child: const MyApp()));
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -60,10 +63,11 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        FocusScope.of(context).unfocus();
+        //FocusScope.of(context).unfocus();
         setState(() {
           isKeyboardVisible = false;
         });
+        Provider.of<KeyboardProvider>(context, listen: false).key = null;
       },
       child: Scaffold(
         appBar: AppBar(
@@ -106,9 +110,46 @@ class _MyHomePageState extends State<MyHomePage> {
                   });
                 },
               ),
+              const CustomTextfield(),
               Expanded(
                 child: Container(),
               ),
+              if (Provider.of<KeyboardProvider>(context).key != null)
+                VirtualKeyboard(
+                  type: VirtualKeyboardType.Alphanumeric,
+                  textController: TextEditingController(text: Provider.of<KeyboardProvider>(context, listen: false).text),
+                  onKeyPress: (key) {
+                    print('key:');
+                    final provider = Provider.of<KeyboardProvider>(context, listen: false);
+                    if (key.keyType == VirtualKeyboardKeyType.Action) {
+                      switch (key.action) {
+                        case VirtualKeyboardKeyAction.Backspace:
+                          print('backspace and ${provider.text}');
+                          if (provider.text!.isNotEmpty) {
+                            provider.text = provider.text!.substring(0, provider.text!.length - 1);
+                          }
+                          break;
+                        case VirtualKeyboardKeyAction.Return:
+                          provider.text = provider.text! + '\n';
+                          break;
+                        case VirtualKeyboardKeyAction.Space:
+                          provider.text = provider.text! + ' ';
+                          break;
+                        case VirtualKeyboardKeyAction.Shift:
+                          shiftEnabled = !shiftEnabled;
+                          break;
+
+                        default:
+                          print('pressed unsupported action');
+                          break;
+                      }
+                    } else if (key is VirtualKeyboardKey) {
+                      print(key.text);
+                      provider.text = provider.text! + key.text!;
+                    }
+                    provider.setTextState!();
+                  },
+                ),
               if (isKeyboardVisible)
                 Stack(children: [
                   KeyboardAux(
@@ -129,8 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // Making the return function properly.
     controllerField01.addListener(() {
       if (controllerField01.value.text.endsWith("\n")) {
-        controllerField01.text =
-            controllerField01.value.text.replaceAll("\n", "");
+        controllerField01.text = controllerField01.value.text.replaceAll("\n", "");
         setState(() {
           controllerKeyboard = controllerField02;
           typeLayout = TypeLayout.alphaEmail;
@@ -139,8 +179,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
     controllerField02.addListener(() {
       if (controllerField02.value.text.endsWith("\n")) {
-        controllerField02.text =
-            controllerField02.value.text.replaceAll("\n", "");
+        controllerField02.text = controllerField02.value.text.replaceAll("\n", "");
         setState(() {
           controllerKeyboard = controllerField03;
           typeLayout = TypeLayout.numeric;
@@ -149,8 +188,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
     controllerField03.addListener(() {
       if (controllerField03.value.text.endsWith("\n")) {
-        controllerField03.text =
-            controllerField03.value.text.replaceAll("\n", "");
+        controllerField03.text = controllerField03.value.text.replaceAll("\n", "");
         setState(() {
           isKeyboardVisible = false;
         });
