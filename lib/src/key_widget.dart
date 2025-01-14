@@ -16,8 +16,6 @@ class KeyWidget extends StatelessWidget {
     this.enableLongpress = false,
   });
 
-  final longPressEventPeriod = const Duration(milliseconds: 250);
-
   final VirtualKeyboardKey keyboardKey;
   final bool alwaysCaps;
   final bool isShiftEnabled;
@@ -78,29 +76,51 @@ class KeyWidget extends StatelessWidget {
 
     return Expanded(
       flex: flex,
-      child: enableLongpress ? _longpressDetector(child: keyInkwell, key: key) : keyInkwell,
+      child: enableLongpress ? LongPressDetector(keyboardKey: key, onKeyPress: onKeyPress, child: keyInkwell) : keyInkwell,
     );
   }
+}
 
-  Widget _longpressDetector({required Widget child, required VirtualKeyboardKey key}) {
-    bool longPress = false;
+class LongPressDetector extends StatefulWidget {
+  const LongPressDetector({
+    required this.child,
+    required this.keyboardKey,
+    required this.onKeyPress,
+    super.key,
+  });
+
+  final Widget child;
+  final VirtualKeyboardKey keyboardKey;
+  final Function(VirtualKeyboardKey) onKeyPress;
+
+  @override
+  State<LongPressDetector> createState() => _LongPressDetectorState();
+}
+
+class _LongPressDetectorState extends State<LongPressDetector> {
+  final longPressEventPeriod = const Duration(milliseconds: 250);
+  Timer? longPressTimer;
+
+  @override
+  void dispose() {
+    longPressTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return GestureDetector(
       onLongPress: () {
-        longPress = true;
         // Start sending key events while longPress is true
-        Timer.periodic(longPressEventPeriod, (timer) {
-          if (longPress) {
-            onKeyPress(key);
-          } else {
-            timer.cancel();
-          }
+        longPressTimer = Timer.periodic(longPressEventPeriod, (timer) {
+          widget.onKeyPress(widget.keyboardKey);
         });
       },
       onLongPressUp: () {
         // Cancel event loop
-        longPress = false;
+        longPressTimer?.cancel();
       },
-      child: child,
+      child: widget.child,
     );
   }
 }
