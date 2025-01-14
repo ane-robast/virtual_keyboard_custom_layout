@@ -237,8 +237,9 @@ class _VirtualKeyboardState extends State<VirtualKeyboard> {
   /// Returns the rows for keyboard.
   List<Widget> _keyboardRows() {
     List<List<VirtualKeyboardKey>> keyboardRows;
-
-    if (_keyboardState == KeyboardState.primary) {
+    if (keys.isNotEmpty) {
+      keyboardRows = _getKeyboardRows(keys);
+    } else if (_keyboardState == KeyboardState.primary) {
       keyboardRows = _getKeyboardRows(customLayoutKeys.activeLayout);
     } else if (_keyboardState == KeyboardState.secondary) {
       keyboardRows = _getKeyboardRows(customLayoutKeys.getDefaultNumbersLayout());
