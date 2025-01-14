@@ -26,22 +26,7 @@ extension TypeLayoutExtension on TypeLayout {
           ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "BACKSPACE"],
           ["a", "s", "d", "f", "g", "h", "j", "k", "l", "ç", "RETURN"],
           ["SHIFT", "z", "x", "c", "v", "b", "n", "m", "SHIFT"],
-          [
-            ".",
-            "~",
-            "!",
-            "%",
-            "^",
-            "&",
-            "*",
-            "=",
-            "+",
-            "{",
-            "}",
-            "'",
-            "?",
-            "-"
-          ],
+          [".", "~", "!", "%", "^", "&", "*", "=", "+", "{", "}", "'", "?", "-"],
           ["@hotmail.com", "@", "SPACE", "_", "@gmail.com"],
         ];
       default:
