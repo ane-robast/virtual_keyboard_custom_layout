@@ -2,4 +2,4 @@
 
 part of virtual_keyboard_custom_layout;
 
-enum VirtualKeyboardDefaultLayouts { Arabic, English, Custom }
+enum VirtualKeyboardDefaultLayouts { Arabic, English, German, Numeric }

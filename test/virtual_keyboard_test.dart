@@ -7,10 +7,9 @@ void main() {
     List row2 = ["4", "5", "6"];
     List row3 = ["7", "8", "9"];
     final keyboard = VirtualKeyboard(
-      type: VirtualKeyboardType.Custom,
       keys: [row1, row2, row3],
-      onKeyPress: () => null,
+      onKeyPress: (key) => null,
     );
-    expect(keyboard.type, VirtualKeyboardType.Custom);
+    expect(keyboard.keys, [row1, row2, row3]);
   });
 }
