@@ -6,11 +6,19 @@ List<List<VirtualKeyboardKey>> _getKeyboardRows(List<List<dynamic>> keyLayout) {
 }
 
 VirtualKeyboardKey _createKey(dynamic keyValue) {
-  if (keyValue is String) {
+  if (keyValue is String && keyValue.length == 1) {
     return VirtualKeyboardKey(
       text: keyValue,
       capsText: toShift(keyValue),
       keyType: VirtualKeyboardKeyType.String,
+    );
+  } else if (keyValue is String && keyValue.length > 1) {
+    final action = toAction(keyValue);
+    return VirtualKeyboardKey(
+      text: keyValue,
+      capsText: toShift(keyValue),
+      action: action,
+      keyType: action != null ? VirtualKeyboardKeyType.Action : VirtualKeyboardKeyType.String,
     );
   } else if (keyValue is VirtualKeyboardKeyAction) {
     return VirtualKeyboardKey(
@@ -37,4 +45,25 @@ String toShift(String input) {
     // If the character exists in the map, replace it; otherwise, keep it as is
     return shiftMapping[char] ?? char;
   }).join('');
+}
+
+VirtualKeyboardKeyAction? toAction(String input) {
+  switch (input) {
+    case 'BACKSPACE':
+      return VirtualKeyboardKeyAction.Backspace;
+    case 'RETURN':
+      return VirtualKeyboardKeyAction.Return;
+    case 'SHIFT':
+      return VirtualKeyboardKeyAction.Shift;
+    case 'SPACE':
+      return VirtualKeyboardKeyAction.Space;
+    case 'SWITCHTOLETTERS':
+      return VirtualKeyboardKeyAction.SwitchToLetters;
+    case 'SWITCHTONUMBERS':
+      return VirtualKeyboardKeyAction.SwitchToNumbers;
+    case 'SWITCHTOSIGNS':
+      return VirtualKeyboardKeyAction.SwitchToSigns;
+    default:
+      return null;
+  }
 }
