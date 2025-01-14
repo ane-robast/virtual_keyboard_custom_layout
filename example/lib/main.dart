@@ -76,48 +76,17 @@ class _MyHomePageState extends State<MyHomePage> {
         body: Center(
           child: Column(
             children: <Widget>[
-              TextFormField(
-                // To prevent overflow with android and ios native keyboard
-                keyboardType: TextInputType.none,
-                controller: controllerField01,
-                onTap: () {
-                  setState(() {
-                    isKeyboardVisible = true;
-                    controllerKeyboard = controllerField01;
-                    typeLayout = TypeLayout.alphabet;
-                  });
-                },
-              ),
-              TextFormField(
-                keyboardType: TextInputType.none,
-                controller: controllerField02,
-                onTap: () {
-                  setState(() {
-                    isKeyboardVisible = true;
-                    controllerKeyboard = controllerField02;
-                    typeLayout = TypeLayout.alphaEmail;
-                  });
-                },
-              ),
-              TextFormField(
-                keyboardType: TextInputType.none,
-                controller: controllerField03,
-                onTap: () {
-                  setState(() {
-                    isKeyboardVisible = true;
-                    controllerKeyboard = controllerField03;
-                    typeLayout = TypeLayout.numeric;
-                  });
-                },
-              ),
               const CustomTextfield(),
               Expanded(
                 child: Container(),
               ),
               if (Provider.of<KeyboardProvider>(context).key != null)
                 VirtualKeyboard(
-                  type: VirtualKeyboardType.Alphanumeric,
+                  borderColor: Colors.red,
+                  height: 400,
+                  fontSize: 40,
                   textController: TextEditingController(text: Provider.of<KeyboardProvider>(context, listen: false).text),
+                  defaultLayouts: const [VirtualKeyboardDefaultLayouts.Numeric],
                   onKeyPress: (key) {
                     print('key:');
                     final provider = Provider.of<KeyboardProvider>(context, listen: false);
@@ -143,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           print('pressed unsupported action');
                           break;
                       }
-                    } else if (key is VirtualKeyboardKey) {
+                    } else if (key.keyType == VirtualKeyboardKeyType.String) {
                       print(key.text);
                       provider.text = provider.text! + key.text!;
                     }
@@ -156,7 +125,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     alwaysCaps: true,
                     controller: controllerKeyboard,
                     typeLayout: typeLayout,
-                    typeKeyboard: VirtualKeyboardType.Custom,
                   ),
                 ]),
             ],

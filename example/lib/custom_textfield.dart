@@ -5,7 +5,9 @@ import 'package:provider/provider.dart';
 import 'package:virtual_keyboard_custom_layout_example/keyboard_provider.dart';
 
 class CustomTextfield extends StatefulWidget {
-  const CustomTextfield({super.key});
+  const CustomTextfield({this.initialText, super.key});
+
+  final String? initialText;
 
   @override
   State<CustomTextfield> createState() => _CustomTextfieldState();
@@ -13,9 +15,15 @@ class CustomTextfield extends StatefulWidget {
 
 class _CustomTextfieldState extends State<CustomTextfield> {
   final _key = GlobalKey();
-  String text = '';
+  late String text;
   Timer? indicatorBlinkingTimer;
   bool indicatorBlinkingValue = true;
+
+  @override
+  void initState() {
+    text = widget.initialText ?? '';
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +45,7 @@ class _CustomTextfieldState extends State<CustomTextfield> {
           builder: (context, key, child) {
             final isFocused = key == _key;
             if (isFocused && !(indicatorBlinkingTimer?.isActive ?? false)) {
-              indicatorBlinkingTimer = Timer.periodic(const Duration(milliseconds: 750), (timer) {
+              indicatorBlinkingTimer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
                 setState(() {
                   indicatorBlinkingValue = !indicatorBlinkingValue;
                 });
@@ -63,7 +71,7 @@ class _CustomTextfieldState extends State<CustomTextfield> {
                           margin: const EdgeInsets.only(left: 2),
                           height: 18,
                           width: 1,
-                          color: indicatorBlinkingValue ? Colors.black : Colors.blue,
+                          color: indicatorBlinkingValue ? Colors.black : Colors.transparent,
                         )
                     ],
                   ),

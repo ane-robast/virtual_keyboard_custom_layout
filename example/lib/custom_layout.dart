@@ -2,10 +2,10 @@ import 'package:virtual_keyboard_custom_layout/virtual_keyboard_custom_layout.da
 
 class CustomLayoutKeys extends VirtualKeyboardLayoutKeys {
   @override
-  int getLanguagesCount() => 2;
+  int getDefaultLayoutsCount() => 2;
 
   @override
-  List<List> getLanguage(int index) {
+  List<List> getDefaultLayout(int index) {
     switch (index) {
       case 1:
         return _arabicLayout;
@@ -13,6 +13,12 @@ class CustomLayoutKeys extends VirtualKeyboardLayoutKeys {
         return defaultEnglishLayout;
     }
   }
+
+  @override
+  List<List> getDefaultNumbersLayout() => [];
+
+  @override
+  List<List> getDefaultSignsLayout() => [];
 }
 
 const List<List> _arabicLayout = [
@@ -30,50 +36,11 @@ const List<List> _arabicLayout = [
     '0',
   ],
   // Row 2
-  [
-    'ض',
-    'ص',
-    'ث',
-    'ق',
-    'ف',
-    'غ',
-    'ع',
-    'ه',
-    'خ',
-    'ح',
-    'د',
-    VirtualKeyboardKeyAction.Backspace
-  ],
+  ['ض', 'ص', 'ث', 'ق', 'ف', 'غ', 'ع', 'ه', 'خ', 'ح', 'د', VirtualKeyboardKeyAction.Backspace],
   // Row 3
-  [
-    'ش',
-    'س',
-    'ي',
-    'ب',
-    'ل',
-    'ا',
-    'ت',
-    'ن',
-    'م',
-    'ك',
-    'ط',
-    VirtualKeyboardKeyAction.Return
-  ],
+  ['ش', 'س', 'ي', 'ب', 'ل', 'ا', 'ت', 'ن', 'م', 'ك', 'ط', VirtualKeyboardKeyAction.Return],
   // Row 4
-  [
-    'ذ',
-    'ئ',
-    'ء',
-    'ؤ',
-    'ر',
-    'لا',
-    'ى',
-    'ة',
-    'و',
-    '.',
-    'ظ',
-    VirtualKeyboardKeyAction.Shift
-  ],
+  ['ذ', 'ئ', 'ء', 'ؤ', 'ر', 'لا', 'ى', 'ة', 'و', '.', 'ظ', VirtualKeyboardKeyAction.Shift],
   // Row 5
   [
     VirtualKeyboardKeyAction.SwitchLanguage,
