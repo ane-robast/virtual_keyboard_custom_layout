@@ -1,7 +1,4 @@
-import 'dart:async';
-
-import 'package:flutter/material.dart';
-import 'package:virtual_keyboard_custom_layout/virtual_keyboard_custom_layout.dart';
+part of virtual_keyboard_custom_layout;
 
 class KeyWidget extends StatelessWidget {
   const KeyWidget({
