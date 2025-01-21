@@ -111,7 +111,6 @@ class _MyHomePageState extends State<MyHomePage> {
               if (isKeyboardVisible)
                 Stack(children: [
                   KeyboardAux(
-                    alwaysCaps: true,
                     controller: controllerKeyboard,
                     typeLayout: typeLayout,
                   ),
