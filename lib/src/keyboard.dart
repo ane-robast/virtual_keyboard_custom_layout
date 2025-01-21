@@ -101,40 +101,39 @@ class _VirtualKeyboardState extends State<VirtualKeyboard> {
   bool isShiftEnabled = false;
   KeyboardState _keyboardState = KeyboardState.primary;
 
-  void _onKeyPress(VirtualKeyboardKey key) {
+  void _updateText(String newCharacters) {
     final currentOffset = textController.selection.baseOffset == -1 ? textController.text.length : textController.selection.baseOffset;
-    final String newText;
-    final TextSelection newSelection;
+    final newText = textController.text.substring(0, currentOffset) + newCharacters + textController.text.substring(currentOffset);
+    final newSelection = TextSelection.collapsed(offset: currentOffset + newCharacters.length);
+    textController.value = TextEditingValue(text: newText, selection: newSelection);
+  }
+
+  void _onKeyPress(VirtualKeyboardKey key) {
     if (key.keyType == VirtualKeyboardKeyType.String) {
       final String newCharacters;
       if (alwaysCaps || isShiftEnabled) {
         newCharacters = key.capsText ?? '';
+        isShiftEnabled = false;
+        setState(() {});
       } else {
         newCharacters = key.text ?? '';
       }
 
-      newText = textController.text.substring(0, currentOffset) + newCharacters + textController.text.substring(currentOffset);
-
-      newSelection = TextSelection.collapsed(offset: currentOffset + newCharacters.length);
-
-      textController.value = TextEditingValue(text: newText, selection: newSelection);
-
-      isShiftEnabled = false;
+      _updateText(newCharacters);
     } else if (key.keyType == VirtualKeyboardKeyType.Action) {
       switch (key.action) {
         case VirtualKeyboardKeyAction.Backspace:
-          if (textController.text.isEmpty || currentOffset < 1) return;
-          newText = textController.text.substring(0, currentOffset - 1) + textController.text.substring(currentOffset);
-          newSelection = TextSelection.collapsed(offset: currentOffset - 1);
+          if (textController.text.isEmpty || textController.selection.baseOffset == 0) return;
+          final currentOffset = textController.selection.baseOffset == -1 ? textController.text.length : textController.selection.baseOffset;
+          final newText = textController.text.substring(0, currentOffset - 1) + textController.text.substring(currentOffset);
+          final newSelection = TextSelection.collapsed(offset: currentOffset - 1);
           textController.value = TextEditingValue(text: newText, selection: newSelection);
           break;
         case VirtualKeyboardKeyAction.Return:
           textController.text += '\n';
           break;
         case VirtualKeyboardKeyAction.Space:
-          newText = '${textController.text.substring(0, currentOffset)} ${textController.text.substring(currentOffset)}';
-          newSelection = TextSelection.collapsed(offset: currentOffset + (key.text?.length ?? 1));
-          textController.value = TextEditingValue(text: newText, selection: newSelection);
+          _updateText(' ');
           break;
         case VirtualKeyboardKeyAction.Shift:
           if (!alwaysCaps) {
