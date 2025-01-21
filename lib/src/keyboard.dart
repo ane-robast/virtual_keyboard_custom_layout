@@ -118,6 +118,8 @@ class _VirtualKeyboardState extends State<VirtualKeyboard> {
       newSelection = TextSelection.collapsed(offset: currentOffset + newCharacters.length);
 
       textController.value = TextEditingValue(text: newText, selection: newSelection);
+
+      isShiftEnabled = false;
     } else if (key.keyType == VirtualKeyboardKeyType.Action) {
       switch (key.action) {
         case VirtualKeyboardKeyAction.Backspace:
